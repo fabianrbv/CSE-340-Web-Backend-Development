@@ -79,7 +79,7 @@ Hero
 .float-card { 
   position: absolute; 
   top: 65px;
-  background: rgba(134, 187, 216, 0.8); 
+  background: rgba(98, 136, 156, 0.8); 
   font-size:.75rem ;
   max-width: 200px;
   min-height: 100px;
