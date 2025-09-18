@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <main>
+    <!-- ====================== -->
+    <!-- 1. Content Heading -->
+    <!-- ====================== -->
+    <% if (title) { %>
+      <h1><%= title %></h1>
+    <% } else { %>
+      <h1>Unexpected Error</h1>
+    <% } %>
+
+    <!-- ====================== -->
+    <!-- 2. Error Message -->
+    <!-- ====================== -->
+    <section id="error-display">
+      <p><%- message %></p>
+    </section>
+
+    <!-- ====================== -->
+    <!-- 3. Link back to Home -->
+    <!-- ====================== -->
+    <section>
+      <a href="/" title="Back to Home">Return to Home</a>
+    </section>
+  </main>
+</body>
+</html>
