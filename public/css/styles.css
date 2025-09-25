@@ -1,3 +1,56 @@
+/* ===============
+Vehicle Detail Page
+================== */
+.vehicle-detail-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.vehicle-image img {
+  max-width: 350px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.vehicle-info {
+  max-width: 400px;
+  width: 100%;
+  background: #f6fafd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.5rem 2rem;
+  margin-top: 1rem;
+}
+.vehicle-info h2 {
+  margin-bottom: 1rem;
+  color: #335a82;
+}
+.vehicle-info p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+.vehicle-info strong {
+  color: #335a82;
+}
+
+@media (min-width: 700px) {
+  .vehicle-detail-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .vehicle-image {
+    margin-right: 2rem;
+  }
+  .vehicle-info {
+    margin-top: 0;
+  }
+}
+
 /******* Change Box Model ***************/
 *,
 *:before,

@@ -57,6 +57,31 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
+/* **************************************
+* Build the detail view HTML
+* ************************************ */
+
+Util.buildDetailView = async function(vehicle){
+  let detail = '<div class= "vehicle-detail-wrapper">';
+
+  if(vehicle) {
+  detail += '<div class="vehicle-image">'
+  detail += `<img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">`
+  detail += '</div>'
+  detail += '<div class="vehicle-info">'
+  detail += `<h2>${vehicle.inv_make} ${vehicle.inv_model}</h2>`
+  detail += `<p><strong>Price:</strong> $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</p>`
+  detail += `<p><strong>Description:</strong> ${vehicle.inv_description}</p>`
+  detail += `<p><strong>Color:</strong> ${vehicle.inv_color}</p>`
+  detail += `<p><strong>Miles:</strong> ${vehicle.inv_miles.toLocaleString()}</p>`
+  detail += '</div>'
+  detail += '</div>'
+ } else {
+  detail += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+ }
+return detail
+}
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
