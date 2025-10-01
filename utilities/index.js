@@ -1,6 +1,20 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
 
+/* **************************************
+* Build the classification select list HTML
+* ************************************ */
+Util.buildClassificationList = async function(selectedId = "") {
+  let data = await invModel.getClassifications();
+  let list = '<select id="classification_id" name="classification_id" required>';
+  list += '<option value="">Choose a Classification</option>';
+  data.rows.forEach(row => {
+    list += `<option value="${row.classification_id}"${row.classification_id == selectedId ? " selected" : ""}>${row.classification_name}</option>`;
+  });
+  list += '</select>';
+  return list;
+}
+
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */

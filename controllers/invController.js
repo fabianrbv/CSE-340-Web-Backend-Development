@@ -3,6 +3,81 @@ const utilities = require("../utilities/")
 
 const invCont = {}
 
+// Management view
+invCont.buildManagement = async function (req, res) {
+  let nav = await utilities.getNav();
+  res.render("inventory/management", {
+    title: "Inventory Management",
+    nav,
+  });
+}
+
+// Add classification view
+invCont.buildAddClassification = async function (req, res) {
+  let nav = await utilities.getNav();
+  res.render("inventory/add-classification", {
+    title: "Add Classification",
+    nav,
+    errors: null,
+    classification_name: ""
+  });
+}
+
+// Add classification POST
+invCont.addClassification = async function (req, res) {
+  let nav = await utilities.getNav();
+  const { classification_name } = req.body;
+  const result = await invModel.addClassification(classification_name);
+  if (result && result.rowCount > 0) {
+    req.flash("notice", "Classification added successfully.");
+    nav = await utilities.getNav();
+    res.redirect("/inv/");
+  } else {
+    req.flash("notice", "Failed to add classification.");
+    res.status(501).render("inventory/add-classification", {
+      title: "Add Classification",
+      nav,
+      errors: null,
+      classification_name
+    });
+  }
+}
+
+// Add inventory view
+invCont.buildAddInventory = async function (req, res) {
+  let nav = await utilities.getNav();
+  let classificationList = await utilities.buildClassificationList();
+  res.render("inventory/add-inventory", {
+    title: "Add Inventory Item",
+    nav,
+    errors: null,
+    classificationList,
+    inv_make: "", inv_model: "", inv_year: "", inv_description: "", inv_price: "",
+    inv_miles: "", inv_color: "", classification_id: "", inv_image: "", inv_thumbnail: ""
+  });
+}
+
+// Add inventory POST
+invCont.addInventory = async function (req, res) {
+  let nav = await utilities.getNav();
+  let classificationList = await utilities.buildClassificationList(req.body.classification_id);
+  const result = await invModel.addInventory(req.body);
+  if (result && result.rowCount > 0) {
+    req.flash("notice", "Inventory item added successfully.");
+    nav = await utilities.getNav();
+    res.redirect("/inv/");
+  } else {
+    req.flash("notice", "Failed to add inventory item.");
+    res.status(501).render("inventory/add-inventory", {
+      title: "Add Inventory Item",
+      nav,
+      errors: null,
+      classificationList,
+      ...req.body
+    });
+  }
+}
+
 /* ***************************
  *  Build inventory by classification view
  * ************************** */

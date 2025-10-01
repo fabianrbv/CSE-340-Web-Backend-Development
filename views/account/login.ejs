@@ -1,12 +1,14 @@
 <main class="login-container">
   <h1><%= title %></h1>
 
-  <!-- Flash Messages -->
-  <% if (messages && messages().length > 0) { %>
-    <div class="flash-messages">
-      <%= messages() %>
-    </div>
-  <% } %>
+<% if (title) { %>
+  <div class="flash-success">
+    <%- messages() %>
+  </div>
+<% } else {
+  res.redirect('/')
+} %>
+
 
   <!-- Login Form -->
   <form action="/account/login" method="post" class="login-form">
