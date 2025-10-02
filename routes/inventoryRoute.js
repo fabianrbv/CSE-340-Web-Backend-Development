@@ -21,6 +21,20 @@ router.post("/add-classification", classificationValidate.rules(), classificatio
 router.get("/add-inventory", utilities.handleErrors(invController.buildAddInventory));
 router.post("/add-inventory", inventoryValidate.rules(), inventoryValidate.check, utilities.handleErrors(invController.addInventory));
 
+// Get inventory as JSON for management view
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON));
+
+// Edit inventory item view
+router.get("/edit/:inv_id", utilities.handleErrors(invController.buildEditInventory));
+
+// Update inventory item
+router.post(
+	"/update",
+	inventoryValidate.rules(),
+	inventoryValidate.checkUpdateData,
+	utilities.handleErrors(invController.updateInventory)
+);
+
 //Error router
 router.get("/causeError", utilities.handleErrors(invController.throwError));
 

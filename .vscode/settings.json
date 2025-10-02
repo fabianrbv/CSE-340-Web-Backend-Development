@@ -13,5 +13,6 @@
             "name": "render.com",
             "connectString": "postgresql://cse340:zZ6pCFZxa5aLOYi8xhK9Piy5NqMhNOni@dpg-d2uao7je5dus73ej93ag-a.oregon-postgres.render.com/cse340_b2sk"
         }
-    ]
+    ],
+    "postman.settings.dotenv-detection-notification-visibility": false
 }

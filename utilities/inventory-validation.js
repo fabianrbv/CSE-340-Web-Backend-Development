@@ -15,6 +15,7 @@ validate.rules = () => [
   body("inv_thumbnail").trim().notEmpty().withMessage("Thumbnail path is required."),
 ]
 
+// checkInventoryData
 validate.check = async (req, res, next) => {
   const {
     inv_make, inv_model, inv_year, inv_description, inv_price,
@@ -29,6 +30,32 @@ validate.check = async (req, res, next) => {
       title: "Add Inventory Item",
       nav,
       classificationList,
+      inv_make, inv_model, inv_year, inv_description, inv_price,
+      inv_miles, inv_color, classification_id, inv_image, inv_thumbnail
+    })
+    return
+  }
+  next()
+}
+
+// checkUpdateData: Middleware for update inventory validation, redirects errors to edit view
+validate.checkUpdateData = async (req, res, next) => {
+  const {
+    inv_id,
+    inv_make, inv_model, inv_year, inv_description, inv_price,
+    inv_miles, inv_color, classification_id, inv_image, inv_thumbnail
+  } = req.body
+  let errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    let classificationSelect = await utilities.buildClassificationList(classification_id)
+    const itemName = `${inv_make} ${inv_model}`
+    res.render("inventory/edit-inventory", {
+      errors,
+      title: "Edit " + itemName,
+      nav,
+      classificationSelect,
+      inv_id,
       inv_make, inv_model, inv_year, inv_description, inv_price,
       inv_miles, inv_color, classification_id, inv_image, inv_thumbnail
     })
