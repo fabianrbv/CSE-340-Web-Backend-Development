@@ -132,11 +132,11 @@ invCont.throwError = async (req, res) => {
 invCont.getInventoryJSON = async (req, res, next) => {
   const classification_id = parseInt(req.params.classification_id)
   const invData = await invModel.getInventoryByClassificationId(classification_id)
-  if (invData[0].inv_id) {
+  if (invData && invData.length > 0) {
     return res.json(invData)
-  } else {
-    next(new Error("No data returned"))
   }
+  // return empty array when no rows so client can handle it gracefully
+  return res.json([])
 }
 
 /* ***************************

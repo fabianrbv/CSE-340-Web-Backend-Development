@@ -41,8 +41,7 @@
     <input type="text" id="inv_thumbnail" name="inv_thumbnail" required value="<%= typeof inv_thumbnail !== 'undefined' ? inv_thumbnail : '/images/vehicles/no-image-tn.png' %>">
 
   <button type="submit" disabled>Update Vehicle</button>
-    <input type="hidden" name="inv_id"
-    <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"<% } %>>
+  
   </form>
 
   <script src="/js/inv-update.js"></script>

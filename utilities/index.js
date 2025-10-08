@@ -1,6 +1,5 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
-const utilities = require("../utilities/")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
@@ -132,13 +131,35 @@ Util.checkJWTToken = (req, res, next) => {
 /* ****************************************
  *  Check Login
  * ************************************ */
- Util.checkLogin = (req, res, next) => {
+Util.checkLogin = (req, res, next) => {
   if (res.locals.loggedin) {
     next()
   } else {
     req.flash("notice", "Please log in.")
     return res.redirect("/account/login")
   }
- }
+}
+
+/* ****************************************
+ * Middleware to check account role for inventory admin actions
+ **************************************** */
+Util.checkAccountType = (req, res, next) => {
+  const acct = res.locals.accountData
+  if (acct && (acct.account_type === 'Employee' || acct.account_type === 'Admin')) {
+    next()
+  } else {
+    req.flash('notice', 'Please log in with an employee account to access that page.')
+    return res.redirect('/account/login')
+  }
+}
+
+/* ****************************************
+ * Logout helper - clears jwt and session
+ **************************************** */
+Util.logout = (req, res) => {
+  res.clearCookie('jwt')
+  req.session.destroy(() => {})
+  return res.redirect('/')
+}
 
 module.exports = Util
