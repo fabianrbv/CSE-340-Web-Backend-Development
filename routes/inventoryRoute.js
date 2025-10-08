@@ -27,6 +27,18 @@ router.get("/getInventory/:classification_id", utilities.handleErrors(invControl
 // Edit inventory item view
 router.get("/edit/:inv_id", utilities.handleErrors(invController.buildEditInventory));
 
+// Delete inventory item view
+router.get(
+	"/delete/:inv_id",
+	utilities.handleErrors(invController.buildDeleteInventory)
+);
+
+// Delete inventory item POST
+router.post(
+	"/delete",
+	utilities.handleErrors(invController.deleteInventory)
+);
+
 // Update inventory item
 router.post(
 	"/update",
