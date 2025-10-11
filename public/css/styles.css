@@ -92,6 +92,36 @@ input:required:valid {
   margin-bottom: 0.5em;
 }
 
+/* ===============
+Cart Page Styles
+================== */
+.cart-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #f9fbfd;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  font-family: Arial, Helvetica, sans-serif;
+}
+.cart-container h1 { color: #335a82; margin-bottom: 1rem }
+.cart-container table { width: 100%; border-collapse: collapse; margin-top: 1rem }
+.cart-container th, .cart-container td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e6eef8 }
+.cart-container thead th { background: #f4f8fb; color: #333; font-weight: 600 }
+.cart-container input[type="number"] { width: 5rem; padding: 0.4rem; border: 1px solid #bbb; border-radius: 4px }
+.cart-container button { padding: 0.5rem 0.8rem; background: #335a82; color: #fff; border: none; border-radius: 6px; cursor: pointer }
+.cart-container button:hover { background: #274666 }
+.cart-empty { text-align: center; padding: 2rem; color: #555 }
+.cart-total { text-align: right; margin-top: 1rem; font-weight: 700; color: #222 }
+@media (max-width: 700px) {
+  .cart-container { padding: 1rem }
+  .cart-container table, .cart-container thead, .cart-container tbody, .cart-container th, .cart-container td, .cart-container tr { display: block }
+  .cart-container thead { display: none }
+  .cart-container td { border: none; padding: 0.5rem 0 }
+  .cart-container td:before { content: attr(data-label); font-weight: 600; display: block; color: #335a82 }
+}
+
 /* inv page*/
 .management-container {
   max-width: 600px;         

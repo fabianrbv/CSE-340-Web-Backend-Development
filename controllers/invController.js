@@ -112,7 +112,7 @@ invCont.buildDetailView = async function (req, res, next) {
   res.render("./inventory/detailInventory", {
     title: `${year} ${make} ${model}`,
     nav, 
-    grid
+    grid: await utilities.buildDetailView(data, res.locals.accountData ? res.locals.accountData.account_type : null)
   })
 }
 

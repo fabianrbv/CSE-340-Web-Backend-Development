@@ -2,6 +2,7 @@ const invModel = require("../models/inventory-model")
 const Util = {}
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
+const cartModel = require('../models/cart-model')
 
 /* **************************************
 * Build the classification select list HTML
@@ -77,24 +78,36 @@ Util.buildClassificationGrid = async function(data){
 * Build the detail view HTML
 * ************************************ */
 
-Util.buildDetailView = async function(vehicle){
-  let detail = '<div class= "vehicle-detail-wrapper">';
+// accountType (optional) - will only render Add-to-Cart for 'Client'
+Util.buildDetailView = async function(vehicle, accountType){
+  // include inv_id as a data attribute and render Add to Cart controls
+  let detail = '<div class="vehicle-detail-wrapper" data-inv-id="' + (vehicle ? vehicle.inv_id : '') + '">';
 
   if(vehicle) {
-  detail += '<div class="vehicle-image">'
-  detail += `<img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">`
-  detail += '</div>'
-  detail += '<div class="vehicle-info">'
-  detail += `<h2>${vehicle.inv_make} ${vehicle.inv_model}</h2>`
-  detail += `<p><strong>Price:</strong> $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</p>`
-  detail += `<p><strong>Description:</strong> ${vehicle.inv_description}</p>`
-  detail += `<p><strong>Color:</strong> ${vehicle.inv_color}</p>`
-  detail += `<p><strong>Miles:</strong> ${vehicle.inv_miles.toLocaleString()}</p>`
-  detail += '</div>'
-  detail += '</div>'
- } else {
-  detail += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
- }
+    detail += '<div class="vehicle-image">'
+    detail += `<img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">`
+    detail += '</div>'
+    detail += '<div class="vehicle-info">'
+    detail += `<h2>${vehicle.inv_make} ${vehicle.inv_model}</h2>`
+    detail += `<p><strong>Price:</strong> $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</p>`
+    detail += `<p><strong>Description:</strong> ${vehicle.inv_description}</p>`
+    detail += `<p><strong>Color:</strong> ${vehicle.inv_color}</p>`
+    detail += `<p><strong>Miles:</strong> ${vehicle.inv_miles.toLocaleString()}</p>`
+    detail += '</div>'
+
+    // Add to Cart control (calls window.cartAdd) - only for Clients
+    if (accountType && accountType === 'Client') {
+      detail += '<div class="add-to-cart">'
+      detail += '<label for="cart-quantity">Quantity</label>'
+      detail += '<input type="number" id="cart-quantity" name="quantity" min="1" value="1">'
+      detail += `<button type="button" onclick="window.cartAdd(${vehicle.inv_id}, parseInt(document.getElementById('cart-quantity').value,10))">Add to Cart</button>`
+      detail += '</div>'
+    }
+
+    detail += '</div>'
+  } else {
+    detail += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+  }
 return detail
 }
 
@@ -108,24 +121,28 @@ Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 /* ****************************************
 * Middleware to check token validity
 **************************************** */
-Util.checkJWTToken = (req, res, next) => {
- if (req.cookies.jwt) {
-  jwt.verify(
-   req.cookies.jwt,
-   process.env.ACCESS_TOKEN_SECRET,
-   function (err, accountData) {
-    if (err) {
-     req.flash("Please log in")
-     res.clearCookie("jwt")
-     return res.redirect("/account/login")
+Util.checkJWTToken = async (req, res, next) => {
+  if (req.cookies && req.cookies.jwt) {
+    try {
+      // verify returns the decoded token or throws
+      const accountData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET)
+      res.locals.accountData = accountData
+      res.locals.loggedin = 1
+      // load cart count for header
+      try {
+        const cart = await cartModel.getUserCart(accountData.account_id)
+        res.locals.cartCount = cart && cart.items ? cart.items.reduce((s, i) => s + i.quantity, 0) : 0
+      } catch (e) {
+        res.locals.cartCount = 0
+      }
+      return next()
+    } catch (err) {
+      req.flash('notice', 'Please log in')
+      res.clearCookie('jwt')
+      return res.redirect('/account/login')
     }
-    res.locals.accountData = accountData
-    res.locals.loggedin = 1
-    next()
-   })
- } else {
+  }
   next()
- }
 }
 
 /* ****************************************

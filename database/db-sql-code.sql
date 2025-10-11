@@ -246,3 +246,17 @@ WHERE inv_make = 'GM'
 UPDATE inventory
 SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
     inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
+CREATE TABLE cart (
+    cart_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES account(account_id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+CREATE TABLE cart_items (
+    cart_item_id SERIAL PRIMARY KEY,
+    cart_id INTEGER NOT NULL REFERENCES cart(cart_id) ON DELETE CASCADE,
+    car_id INTEGER NOT NULL REFERENCES inventory(inv_id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    added_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(cart_id, car_id)
+);
+CREATE INDEX idx_cart_user ON cart(user_id);

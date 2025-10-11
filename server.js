@@ -12,6 +12,7 @@ const app = express()
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
+const cartRoute = require("./routes/cartRoute")
 const accountRoute = require("./routes/accountRoute") // Added account route
 const utilities = require("./utilities/") 
 const session = require("express-session")
@@ -66,6 +67,9 @@ app.use("/inv", inventoryRoute)
 // Account routes
 app.use("/account", accountRoute)
 
+// Cart routes
+app.use('/cart', cartRoute)
+
 /* ***********************
  * File Not Found Route - must be last route in list
  *************************/
@@ -79,10 +83,13 @@ app.use(async (req, res, next) => {
  *************************/
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  // Log full error for debugging
+  console.error(`Error at: "${req.originalUrl}":`, err)
+  if (err && err.stack) console.error(err.stack)
+  let message
+  if (err && err.status == 404) { message = err.message } else { message = 'Oh no! There was a crash. Maybe try a different route?' }
   res.render("errors/error", {
-    title: err.status || 'Server Error',
+    title: err && err.status ? err.status : 'Server Error',
     message,
     nav
   })
